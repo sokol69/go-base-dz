@@ -8,7 +8,8 @@ func main() {
 	const UsdToRub = 83.07
 	const EurToRub = UsdToRub / UsdToEur
 	sum, originCurrency, targetCurrency := getUserInput()
-	fmt.Print(sum, originCurrency, targetCurrency)
+	result := convertCurrency(sum, originCurrency, targetCurrency)
+	fmt.Print(result)
 	fmt.Print(EurToRub)
 }
 
@@ -23,4 +24,9 @@ func getUserInput() (float64, string, string) {
 	fmt.Printf("Введите целевую валюту: ")
 	fmt.Scan(&targetCurrency)
 	return sum, originCurrency, targetCurrency
+}
+
+func convertCurrency(sum float64, originCurrency, targetCurrency string) float64 {
+	fmt.Print(sum, originCurrency, targetCurrency)
+	return sum
 }
