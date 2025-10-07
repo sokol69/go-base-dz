@@ -16,38 +16,11 @@ func main() {
 }
 
 func getUserInput() (float64, string, string) {
-	var originCurrency string
-	var sum float64
-	var targetCurrency string
 	currencies := []string{"USD", "EUR", "RUB"}
-
-	for {
-		fmt.Printf("Введите исходную валюту %v: ", currencies)
-		fmt.Scan(&originCurrency)
-
-		if slices.Contains(currencies, originCurrency) {
-			currencies = filterSlice(currencies, originCurrency)
-			break
-		}
-	}
-
-	for {
-		fmt.Printf("Введите сумму: ")
-		fmt.Scan(&sum)
-
-		if !math.IsNaN(sum) && !math.IsInf(sum, 0) && sum > 0 {
-			break
-		}
-	}
-
-	for {
-		fmt.Printf("Введите целевую валюту %v: ", currencies)
-		fmt.Scan(&targetCurrency)
-
-		if slices.Contains(currencies, targetCurrency) {
-			break
-		}
-	}
+	originCurrency := getOriginCurrency(currencies)
+	currencies = filterSlice(currencies, originCurrency)
+	sum := getSum()
+	targetCurrency := getTargetCurrency(currencies)
 
 	return sum, originCurrency, targetCurrency
 }
@@ -62,16 +35,20 @@ func convertCurrency(sum float64, originCurrency, targetCurrency string) float64
 		return sum * UsdToRub
 	}
 
-	if originCurrency == "EUR" && targetCurrency == "RUB" {
-		return sum * EurToRub
-	}
-
 	if originCurrency == "USD" && targetCurrency == "EUR" {
 		return sum * UsdToEur
 	}
 
-	if originCurrency == "RUB" && targetCurrency == "USD" {
+	if originCurrency == "EUR" && targetCurrency == "RUB" {
+		return sum * EurToRub
+	}
+
+	if originCurrency == "EUR" && targetCurrency == "USD" {
 		return sum / UsdToEur
+	}
+
+	if originCurrency == "RUB" && targetCurrency == "USD" {
+		return sum / UsdToRub
 	}
 
 	if originCurrency == "RUB" && targetCurrency == "EUR" {
@@ -91,4 +68,43 @@ func filterSlice(slice []string, target string) []string {
 	}
 
 	return result
+}
+
+func getOriginCurrency(currencies []string) string {
+	var originCurrency string
+
+	for {
+		fmt.Printf("Введите исходную валюту %v: ", currencies)
+		fmt.Scan(&originCurrency)
+
+		if slices.Contains(currencies, originCurrency) {
+			return originCurrency
+		}
+	}
+}
+
+func getSum() float64 {
+	var sum float64
+
+	for {
+		fmt.Printf("Введите сумму: ")
+		fmt.Scan(&sum)
+
+		if !math.IsNaN(sum) && !math.IsInf(sum, 0) && sum > 0 {
+			return sum
+		}
+	}
+}
+
+func getTargetCurrency(currencies []string) string {
+	var targetCurrency string
+
+	for {
+		fmt.Printf("Введите целевую валюту %v: ", currencies)
+		fmt.Scan(&targetCurrency)
+
+		if slices.Contains(currencies, targetCurrency) {
+			return targetCurrency
+		}
+	}
 }
