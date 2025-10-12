@@ -30,32 +30,26 @@ func convertCurrency(sum float64, originCurrency, targetCurrency string) float64
 	const UsdToEur = 0.85
 	const UsdToRub = 83.07
 	const EurToRub = UsdToRub / UsdToEur
+	const EurToUsd = 1 / UsdToEur
+	const RubToUsd = 1 / UsdToRub
+	const RubToEur = 1 / EurToRub
 
-	if originCurrency == "USD" && targetCurrency == "RUB" {
-		return sum * UsdToRub
+	coursesMap := map[string]map[string]float64{
+		"USD": {
+			"RUB": UsdToRub,
+			"EUR": UsdToEur,
+		},
+		"EUR": {
+			"RUB": EurToRub,
+			"USD": EurToUsd,
+		},
+		"RUB": {
+			"EUR": RubToEur,
+			"USD": RubToUsd,
+		},
 	}
 
-	if originCurrency == "USD" && targetCurrency == "EUR" {
-		return sum * UsdToEur
-	}
-
-	if originCurrency == "EUR" && targetCurrency == "RUB" {
-		return sum * EurToRub
-	}
-
-	if originCurrency == "EUR" && targetCurrency == "USD" {
-		return sum / UsdToEur
-	}
-
-	if originCurrency == "RUB" && targetCurrency == "USD" {
-		return sum / UsdToRub
-	}
-
-	if originCurrency == "RUB" && targetCurrency == "EUR" {
-		return sum / EurToRub
-	}
-
-	return 0
+	return sum * coursesMap[originCurrency][targetCurrency]
 }
 
 func filterSlice(slice []string, target string) []string {
