@@ -6,11 +6,33 @@ import (
 	"slices"
 )
 
+const UsdToEur = 0.85
+const UsdToRub = 83.07
+const EurToRub = UsdToRub / UsdToEur
+const EurToUsd = 1 / UsdToEur
+const RubToUsd = 1 / UsdToRub
+const RubToEur = 1 / EurToRub
+
+var coursesMap = map[string]map[string]float64 {
+	"USD": {
+		"RUB": UsdToRub,
+		"EUR": UsdToEur,
+	},
+	"EUR": {
+		"RUB": EurToRub,
+		"USD": EurToUsd,
+	},
+	"RUB": {
+		"EUR": RubToEur,
+		"USD": RubToUsd,
+	},
+}
+
 func main() {
 	fmt.Println("___ Конвертер валют ___")
 
 	sum, originCurrency, targetCurrency := getUserInput()
-	result := convertCurrency(sum, originCurrency, targetCurrency)
+	result := convertCurrency(sum, originCurrency, targetCurrency, &coursesMap)
 
 	fmt.Println(result)
 }
@@ -26,28 +48,8 @@ func getUserInput() (float64, string, string) {
 }
 
 
-func convertCurrency(sum float64, originCurrency, targetCurrency string) float64 {
-	const UsdToEur = 0.85
-	const UsdToRub = 83.07
-	const EurToRub = UsdToRub / UsdToEur
-	const EurToUsd = 1 / UsdToEur
-	const RubToUsd = 1 / UsdToRub
-	const RubToEur = 1 / EurToRub
-
-	coursesMap := map[string]map[string]float64{
-		"USD": {
-			"RUB": UsdToRub,
-			"EUR": UsdToEur,
-		},
-		"EUR": {
-			"RUB": EurToRub,
-			"USD": EurToUsd,
-		},
-		"RUB": {
-			"EUR": RubToEur,
-			"USD": RubToUsd,
-		},
-	}
+func convertCurrency(sum float64, originCurrency, targetCurrency string, courses *map[string]map[string]float64) float64 {
+	coursesMap := *courses
 
 	return sum * coursesMap[originCurrency][targetCurrency]
 }
