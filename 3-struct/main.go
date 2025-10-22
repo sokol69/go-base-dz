@@ -2,7 +2,7 @@ package main
 
 import (
 	"demo/bin/bins"
-	"fmt"
+	"demo/bin/storage"
 )
 
 func main() {
@@ -12,5 +12,5 @@ func main() {
 		return
 	}
 
-	fmt.Println(bin)
+	storage.SaveStorage(bin)
 }
