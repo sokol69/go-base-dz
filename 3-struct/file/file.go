@@ -19,16 +19,16 @@ func ReadFile(name string) ([]byte, error) {
 	return data, nil
 }
 
-func WriteFile(content []byte, name string) {
+func WriteFile(content []byte, name string) error {
 	file, err := os.Create(name)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 	defer file.Close()
 	_, err = file.Write(content)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 	fmt.Println("Success!")
+	return nil
 }
